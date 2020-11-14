@@ -6,31 +6,32 @@
 */
 
 
-model mymodel
+model tsunami
 
 /* Insert your model definition here */
 
-global{
+global {
 	file shape_file_buildings <- file("../includes/buildings.shp");
     file shape_file_roads <- file("../includes/roads.shp");
     file file_shelter <- file("../includes/shelters.csv");
     geometry shape <- envelope(shape_file_roads); 
-    int nb_locals_people <- 100 ;
-    int nb_tourists_people <-1000;
+    int nb_locals_people <- 500;
+    int nb_tourists_people <-100;
   
-	init{
-		create building from: shape_file_buildings;
+	init {
+		//create building from: shape_file_buildings;
         create road from: shape_file_roads ;
-        create locals_people number: nb_locals_people{
-        	location<- any_location_in (one_of(road));
+        create locals_people number: nb_locals_people {
+        	location<- any_location_in(one_of(road));
         }
-        create tourists_people number: nb_tourists_people{
+        create tourists_people number: nb_tourists_people {
         	location<- any_location_in(one_of(road));
         }
         create shelters from: file_shelter;
           
 	}
 }
+
 species building {
 	string type; 
 	rgb color <- #gray  ;
@@ -40,40 +41,39 @@ species building {
 	}
 }
 
-species road  {
+species road {
 	rgb color <- #black ;
 	aspect base {
 		draw shape color: color ;
 	}
 }
-species locals_people{
+species locals_people {
 	rgb color <- #purple;
-	aspect base{
+	aspect base {
 		draw circle(30) color: color border: #black;
 	}
 
 }
-species tourists_people{
+species tourists_people {
 	rgb color <- #yellow;
-	aspect base{
+	aspect base {
 		draw circle(30) color: color border: #black;
 	}
 
 }
-species shelters{
+species shelters {
 	rgb color <- #green;
-	aspect base{
+	aspect base {
 		draw square(100) color: color border: #black;
 	}
-
 }
 
-experiment songthan type:gui{
+experiment tsunami_dn type:gui {
 	
-	parameter " number of locals people" var: nb_locals_people category: "locals" ;
-	parameter " number of tourists people" var: nb_tourists_people category: "tourists" ;
+	parameter "Number of locals: " var: nb_locals_people category: "locals" ;
+	parameter "Number of tourists: " var: nb_tourists_people category: "tourists" ;
 	output {
-		display danang type:opengl{
+		display tsunami_dn type:opengl {
 			species building aspect: base;
 			species road aspect: base;
 			species locals_people aspect: base;
